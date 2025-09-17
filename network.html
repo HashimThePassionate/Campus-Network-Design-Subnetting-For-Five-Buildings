@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>University Campus Network Design</title>
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#1e293b;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --brand:#2563eb;
+      --brand-2:#0ea5e9;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --badge:#0f172a;
+      --chip:#eef2ff;
+      --shadow: 0 10px 24px rgba(2,6,23,0.08);
+      --radius:16px;
+    }
+
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg:#0b1220;
+        --card:#0f172a;
+        --text:#e2e8f0;
+        --muted:#94a3b8;
+        --line:#172033;
+        --brand:#3b82f6;
+        --brand-2:#22d3ee;
+        --badge:#0b1220;
+        --chip:#0b285a;
+        --shadow: 0 10px 26px rgba(0,0,0,0.45);
+      }
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(37,99,235,.06), transparent 60%),
+                  radial-gradient(1000px 500px at 110% 10%, rgba(14,165,233,.08), transparent 60%), var(--bg);
+      color:var(--text);
+      padding:28px 16px 64px;
+    }
+
+    header{
+      max-width:1200px;
+      margin:0 auto 24px auto;
+      text-align:center;
+    }
+    h1{
+      margin:0 0 10px 0;
+      font-size:clamp(1.6rem, 2.2vw + 1rem, 2.4rem);
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      color:var(--muted);
+      font-size:.98rem;
+    }
+    .divider{
+      height:4px;
+      width:160px;
+      margin:18px auto 0;
+      background:linear-gradient(90deg, var(--brand), var(--brand-2));
+      border-radius:999px;
+    }
+
+    /* Top legend */
+    .legend{
+      max-width:1200px;
+      margin:22px auto 8px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:center;
+    }
+    .legend .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.5rem .75rem;
+      background:var(--chip);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:999px;
+      font-size:.85rem;
+      font-weight:600;
+    }
+    .chip .fa-solid{opacity:.9}
+
+    /* Grid */
+    .grid{
+      max-width:1200px;
+      margin:16px auto 0;
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(290px, 1fr));
+      gap:22px;
+    }
+
+    /* Building Card */
+    .building{
+      position:relative;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      transform:translateZ(0);
+      transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .building:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 18px 38px rgba(2,6,23,0.15);
+      border-color: rgba(37,99,235,.35);
+    }
+
+    /* Roof */
+    .roof{
+      position:relative;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      height:82px;
+    }
+    .roof::after{
+      /* small triangular overhang */
+      content:"";
+      position:absolute; inset:auto auto -18px 50%;
+      width:140px; height:36px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      opacity:.25;
+      pointer-events:none;
+    }
+
+    .roof h2{
+      margin:0; padding:18px 16px 0 16px;
+      font-size:1.2rem;
+      font-weight:800;
+      letter-spacing:.3px;
+      text-align:center;
+      color:#fff;
+      text-shadow:0 1px 0 rgba(0,0,0,.25);
+    }
+
+    .roof .nid{
+      display:inline-flex;
+      align-items:center;
+      gap:.5rem;
+      padding:.4rem .7rem;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.3);
+      color:#fff;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.9rem;
+      margin:10px auto 12px;
+      backdrop-filter: blur(4px);
+    }
+    .roof .nid .fa-solid{opacity:.95}
+
+    /* Windows band (for the “building” look) */
+    .windows{
+      height:42px;
+      background:
+        repeating-linear-gradient(90deg,
+          rgba(37,99,235,.12) 0 14px,
+          transparent 14px 42px),
+        linear-gradient(to bottom, rgba(37,99,235,.1), transparent 60%);
+      border-bottom:1px dashed var(--line);
+    }
+
+    .body{
+      padding:18px 18px 20px;
+      display:grid;
+      gap:12px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns: 28px 150px 1fr;
+      gap:12px;
+      align-items:center;
+    }
+    .row .ico{
+      height:30px; width:30px; display:grid; place-items:center;
+      border-radius:8px;
+      background:linear-gradient(180deg, rgba(2,6,23,.06), transparent);
+      border:1px solid var(--line);
+      color:var(--brand);
+    }
+    .row .label{
+      font-weight:700; font-size:.93rem; color:var(--text);
+    }
+    .row .val{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-weight:700;
+      color:var(--text);
+      background: linear-gradient(180deg, rgba(2,6,23,.04), rgba(2,6,23,.02));
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:.48rem .6rem;
+      text-align:center;
+      min-height:36px;
+    }
+
+    .hint{ color:var(--muted); font-size:.82rem; margin-top:2px }
+
+    /* status accents for icons */
+    .ico.router{ color:var(--ok) }
+    .ico.mask{ color:#8b5cf6 }
+    .ico.range{ color:var(--warn) }
+    .ico.broadcast{ color:var(--danger) }
+
+    /* Footer */
+    footer{
+      max-width:1200px;
+      margin:26px auto 0;
+      display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:.88rem;
+    }
+    footer .note{ padding:.35rem .6rem; border:1px dashed var(--line); border-radius:8px }
+
+    /* Responsive tweaks */
+    @media (max-width:480px){
+      .row{ grid-template-columns: 24px 1fr; grid-auto-rows:auto }
+      .row .label{ order:2 }
+      .row .val{ grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🏢 University Campus Network Design</h1>
+    <p class="subtitle">Five isolated /26 subnets (62 usable IPs each) connected via a Layer-3 core or routers.</p>
+    <div class="divider"></div>
+  </header>
+
+  <!-- Quick legend -->
+  <div class="legend" aria-label="Legend">
+    <span class="chip"><i class="fa-solid fa-network-wired"></i> Network ID</span>
+    <span class="chip"><i class="fa-solid fa-route"></i> Router IP</span>
+    <span class="chip"><i class="fa-solid fa-shield-halved"></i> Subnet Mask</span>
+    <span class="chip"><i class="fa-solid fa-computer"></i> Usable IP Range</span>
+    <span class="chip"><i class="fa-solid fa-tower-broadcast"></i> Broadcast ID</span>
+  </div>
+
+  <main class="grid" role="list">
+    <!-- Building 1 -->
+    <article class="building" role="listitem" aria-label="Building 1: CS Dept">
+      <div class="roof">
+        <h2>Building 1 · CS Dept</h2>
+        <div class="nid" title="Subnet">
+          <i class="fa-solid fa-network-wired"></i> 192.168.1.0 /26
+        </div>
+      </div>
+      <div class="windows" aria-hidden="true"></div>
+      <div class="body">
+        <div class="row">
+          <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+          <div class="label">Network ID</div>
+          <div class="val">192.168.1.0/26</div>
+        </div>
+        <div class="row">
+          <div class="ico router"><i class="fa-solid fa-route"></i></div>
+          <div class="label">Router IP</div>
+          <div class="val" title="Default Gateway">192.168.1.1</div>
+        </div>
+        <div class="row">
+          <div class="ico mask"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="label">Subnet Mask</div>
+          <div class="val">255.255.255.192</div>
+        </div>
+        <div class="row">
+          <div class="ico range"><i class="fa-solid fa-computer"></i></div>
+          <div class="label">Usable IP Range</div>
+          <div class="val">192.168.1.1 <br/> To <br/> 192.168.1.62</div>
+        </div>
+        <div class="row">
+          <div class="ico broadcast"><i class="fa-solid fa-tower-broadcast"></i></div>
+          <div class="label">Broadcast ID</div>
+          <div class="val">192.168.1.63</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Building 2 -->
+    <article class="building" role="listitem" aria-label="Building 2: EE Dept">
+      <div class="roof">
+        <h2>Building 2 · EE Dept</h2>
+        <div class="nid"><i class="fa-solid fa-network-wired"></i> 192.168.1.64 /26</div>
+      </div>
+      <div class="windows" aria-hidden="true"></div>
+      <div class="body">
+        <div class="row">
+          <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+          <div class="label">Network ID</div>
+          <div class="val">192.168.1.64/26</div>
+        </div>
+        <div class="row">
+          <div class="ico router"><i class="fa-solid fa-route"></i></div>
+          <div class="label">Router IP</div>
+          <div class="val">192.168.1.65</div>
+        </div>
+        <div class="row">
+          <div class="ico mask"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="label">Subnet Mask</div>
+          <div class="val">255.255.255.192</div>
+        </div>
+        <div class="row">
+          <div class="ico range"><i class="fa-solid fa-computer"></i></div>
+          <div class="label">Usable IP Range</div>
+          <div class="val">192.168.1.65  <br/> To <br/>  192.168.1.126</div>
+        </div>
+        <div class="row">
+          <div class="ico broadcast"><i class="fa-solid fa-tower-broadcast"></i></div>
+          <div class="label">Broadcast ID</div>
+          <div class="val">192.168.1.127</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Building 3 -->
+    <article class="building" role="listitem" aria-label="Building 3: ME Dept">
+      <div class="roof">
+        <h2>Building 3 · ME Dept</h2>
+        <div class="nid"><i class="fa-solid fa-network-wired"></i> 192.168.1.128 /26</div>
+      </div>
+      <div class="windows" aria-hidden="true"></div>
+      <div class="body">
+        <div class="row">
+          <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+          <div class="label">Network ID</div>
+          <div class="val">192.168.1.128/26</div>
+        </div>
+        <div class="row">
+          <div class="ico router"><i class="fa-solid fa-route"></i></div>
+          <div class="label">Router IP</div>
+          <div class="val">192.168.1.129</div>
+        </div>
+        <div class="row">
+          <div class="ico mask"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="label">Subnet Mask</div>
+          <div class="val">255.255.255.192</div>
+        </div>
+        <div class="row">
+          <div class="ico range"><i class="fa-solid fa-computer"></i></div>
+          <div class="label">Usable IP Range</div>
+          <div class="val">192.168.1.129  <br/> To <br/>  192.168.1.190</div>
+        </div>
+        <div class="row">
+          <div class="ico broadcast"><i class="fa-solid fa-tower-broadcast"></i></div>
+          <div class="label">Broadcast ID</div>
+          <div class="val">192.168.1.191</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Building 4 -->
+    <article class="building" role="listitem" aria-label="Building 4: Admin Block">
+      <div class="roof">
+        <h2>Building 4 · Admin Block</h2>
+        <div class="nid"><i class="fa-solid fa-network-wired"></i> 192.168.1.192 /26</div>
+      </div>
+      <div class="windows" aria-hidden="true"></div>
+      <div class="body">
+        <div class="row">
+          <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+          <div class="label">Network ID</div>
+          <div class="val">192.168.1.192/26</div>
+        </div>
+        <div class="row">
+          <div class="ico router"><i class="fa-solid fa-route"></i></div>
+          <div class="label">Router IP</div>
+          <div class="val">192.168.1.193</div>
+        </div>
+        <div class="row">
+          <div class="ico mask"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="label">Subnet Mask</div>
+          <div class="val">255.255.255.192</div>
+        </div>
+        <div class="row">
+          <div class="ico range"><i class="fa-solid fa-computer"></i></div>
+          <div class="label">Usable IP Range</div>
+          <div class="val">192.168.1.193  <br/> To <br/>  192.168.1.254</div>
+        </div>
+        <div class="row">
+          <div class="ico broadcast"><i class="fa-solid fa-tower-broadcast"></i></div>
+          <div class="label">Broadcast ID</div>
+          <div class="val">192.168.1.255</div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Building 5 -->
+    <article class="building" role="listitem" aria-label="Building 5: Library">
+      <div class="roof">
+        <h2>Building 5 · Library</h2>
+        <div class="nid"><i class="fa-solid fa-network-wired"></i> 192.168.2.0 /26</div>
+      </div>
+      <div class="windows" aria-hidden="true"></div>
+      <div class="body">
+        <div class="row">
+          <div class="ico"><i class="fa-solid fa-network-wired"></i></div>
+          <div class="label">Network ID</div>
+          <div class="val">192.168.2.0/26</div>
+        </div>
+        <div class="row">
+          <div class="ico router"><i class="fa-solid fa-route"></i></div>
+          <div class="label">Router IP</div>
+          <div class="val">192.168.2.1</div>
+        </div>
+        <div class="row">
+          <div class="ico mask"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="label">Subnet Mask</div>
+          <div class="val">255.255.255.192</div>
+        </div>
+        <div class="row">
+          <div class="ico range"><i class="fa-solid fa-computer"></i></div>
+          <div class="label">Usable IP Range</div>
+          <div class="val">192.168.2.1  <br/> To <br/>  192.168.2.62</div>
+        </div>
+        <div class="row">
+          <div class="ico broadcast"><i class="fa-solid fa-tower-broadcast"></i></div>
+          <div class="label">Broadcast ID</div>
+          <div class="val">192.168.2.63</div>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="note">Usable range = Network ID + 1 → Broadcast − 1</div>
+    <div class="note">Typical default-gateway = first usable IP (e.g., 192.168.1.1)</div>
+    <div class="note">/26 = 64 addresses (62 usable)</div>
+  </footer>
+</body>
+</html>
