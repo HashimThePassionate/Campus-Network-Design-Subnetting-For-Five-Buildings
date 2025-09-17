@@ -9,7 +9,7 @@ The design ensures each building has its own **Local Area Network (LAN)** while 
 ---
 ## 🔗 Live Review
 
-[**Live Campus Network Simulation**](./network.html)
+[**Live Campus Network Simulation**](https://hashimthepassionate.github.io/Campus-Network-Design-Subnetting-For-Five-Buildings/network.html)
 
 
 ---
