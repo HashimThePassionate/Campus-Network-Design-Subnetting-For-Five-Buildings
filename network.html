@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>University Campus Network Design</title>
 
-  <!-- Fonts & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -131,6 +130,10 @@
       position:relative;
       background: linear-gradient(135deg, var(--brand), var(--brand-2));
       height:82px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .roof::after{
       /* small triangular overhang */
@@ -145,7 +148,7 @@
     }
 
     .roof h2{
-      margin:0; padding:18px 16px 0 16px;
+      margin:0; padding:0;
       font-size:1.2rem;
       font-weight:800;
       letter-spacing:.3px;
@@ -165,7 +168,7 @@
       border-radius:999px;
       font-weight:700;
       font-size:.9rem;
-      margin:10px auto 12px;
+      margin:8px auto 0;
       backdrop-filter: blur(4px);
     }
     .roof .nid .fa-solid{opacity:.95}
@@ -233,11 +236,30 @@
     }
     footer .note{ padding:.35rem .6rem; border:1px dashed var(--line); border-radius:8px }
 
-    /* Responsive tweaks */
+    /* Responsive tweaks for smaller screens */
     @media (max-width:480px){
-      .row{ grid-template-columns: 24px 1fr; grid-auto-rows:auto }
-      .row .label{ order:2 }
-      .row .val{ grid-column: 1 / -1; }
+      .row {
+        /* Har item ek alag line par aur center mein */
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        justify-items: center; /* Horizontally center alignment */
+        gap: 8px; /* Items ke beech ka fasla kam karen */
+      }
+      .row .ico {
+        grid-row: 1;
+        grid-column: 1;
+      }
+      .row .label {
+        grid-row: 2;
+        grid-column: 1;
+        text-align: center; /* Label ko center mein le jayen */
+      }
+      .row .val {
+        grid-row: 3;
+        grid-column: 1;
+        width: 100%; /* Value block poori width le ga */
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -248,7 +270,6 @@
     <div class="divider"></div>
   </header>
 
-  <!-- Quick legend -->
   <div class="legend" aria-label="Legend">
     <span class="chip"><i class="fa-solid fa-network-wired"></i> Network ID</span>
     <span class="chip"><i class="fa-solid fa-route"></i> Router IP</span>
@@ -258,7 +279,6 @@
   </div>
 
   <main class="grid" role="list">
-    <!-- Building 1 -->
     <article class="building" role="listitem" aria-label="Building 1: CS Dept">
       <div class="roof">
         <h2>Building 1 · CS Dept</h2>
@@ -296,7 +316,6 @@
       </div>
     </article>
 
-    <!-- Building 2 -->
     <article class="building" role="listitem" aria-label="Building 2: EE Dept">
       <div class="roof">
         <h2>Building 2 · EE Dept</h2>
@@ -332,7 +351,6 @@
       </div>
     </article>
 
-    <!-- Building 3 -->
     <article class="building" role="listitem" aria-label="Building 3: ME Dept">
       <div class="roof">
         <h2>Building 3 · ME Dept</h2>
@@ -368,7 +386,6 @@
       </div>
     </article>
 
-    <!-- Building 4 -->
     <article class="building" role="listitem" aria-label="Building 4: Admin Block">
       <div class="roof">
         <h2>Building 4 · Admin Block</h2>
@@ -404,7 +421,6 @@
       </div>
     </article>
 
-    <!-- Building 5 -->
     <article class="building" role="listitem" aria-label="Building 5: Library">
       <div class="roof">
         <h2>Building 5 · Library</h2>
